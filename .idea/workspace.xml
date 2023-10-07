@@ -5,13 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a6379c0f-a8d9-41a6-9f8a-4b64dd023321" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Pac-Man-Game.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pacman/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pacman/Model.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pacman/Pacman.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pacman/Pacman.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,6 +57,12 @@
       <updated>1694882938949</updated>
       <workItem from="1694882939950" duration="1563000" />
       <workItem from="1694920992156" duration="32000" />
+      <workItem from="1696164851680" duration="1840000" />
+      <workItem from="1696319004361" duration="471000" />
+      <workItem from="1696603960985" duration="97000" />
+      <workItem from="1696622084628" duration="336000" />
+      <workItem from="1696687108330" duration="366000" />
+      <workItem from="1696687499414" duration="3876000" />
     </task>
     <servers />
   </component>
