@@ -112,6 +112,76 @@ public class Model extends JPanel implements ActionListener {
         }
     }
 
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        Graphics2D g2d = (Graphics2D) g;
+
+        g2d.setColor(Color.black);
+        g2d.fillRect(0, 0, d.width, d.height);
+
+        drawMaze(g2d);
+        //drawScore(g2d);
+
+        if (inGame) {
+            //playGame(g2d);
+        } else {
+            showIntroScreen(g2d);
+        }
+
+        Toolkit.getDefaultToolkit().sync();
+        g2d.dispose();
+    }
+
+    private void drawMaze(Graphics2D g2d) {
+
+        short i = 0;
+        int x, y;
+
+        for (y = 0; y < SCREEN_SIZE; y += BLOCK_SIZE) {
+            for (x = 0; x < SCREEN_SIZE; x += BLOCK_SIZE) {
+
+                g2d.setColor(new Color(0,72,251));
+                g2d.setStroke(new BasicStroke(5));
+
+                if ((levelData[i] == 0)) {
+                    g2d.fillRect(x, y, BLOCK_SIZE, BLOCK_SIZE);
+                }
+
+                if ((screenData[i] & 1) != 0) {
+                    g2d.drawLine(x, y, x, y + BLOCK_SIZE - 1);
+                }
+
+                if ((screenData[i] & 2) != 0) {
+                    g2d.drawLine(x, y, x + BLOCK_SIZE - 1, y);
+                }
+
+                if ((screenData[i] & 4) != 0) {
+                    g2d.drawLine(x + BLOCK_SIZE - 1, y, x + BLOCK_SIZE - 1,
+                            y + BLOCK_SIZE - 1);
+                }
+
+                if ((screenData[i] & 8) != 0) {
+                    g2d.drawLine(x, y + BLOCK_SIZE - 1, x + BLOCK_SIZE - 1,
+                            y + BLOCK_SIZE - 1);
+                }
+
+                if ((screenData[i] & 16) != 0) {
+                    g2d.setColor(new Color(255,255,255));
+                    g2d.fillOval(x + 10, y + 10, 6, 6);
+                }
+
+                i++;
+            }
+        }
+    }
+    private void showIntroScreen(Graphics2D g2d) {
+
+        String start = "Press SPACE to start";
+        g2d.setColor(Color.yellow);
+        g2d.drawString(start, (SCREEN_SIZE)/4, 150);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         repaint();
