@@ -91,7 +91,46 @@ public class Model extends JPanel implements ActionListener {
         dy = new int[4];
 
         timer = new Timer(60, this);//animations
-        timer.start();
+        timer.restart();
+    }
+
+    class TAdapter extends KeyEvent{
+        public TAdapter(Component source, int id, long when, int modifiers, int keyCode, char keyChar, int keyLocation) {
+            super(source, id, when, modifiers, keyCode, keyChar, keyLocation);
+        }
+
+        public void keypressed(KeyEvent event){
+            int key=event.getKeyCode();
+
+            if(inGame){
+                if(key==KeyEvent.VK_LEFT){
+                    req_dx=-1;
+                    req_dy=0;
+                }
+                else if(key==KeyEvent.VK_RIGHT){
+                    req_dx=1;
+                    req_dy=0;
+                }
+                else if(key==KeyEvent.VK_UP){
+                    req_dx=0;
+                    req_dy=-1;
+                }
+                else if(key==KeyEvent.VK_DOWN){
+                    req_dx=0;
+                    req_dy=1;
+                }
+                else if(key==KeyEvent.VK_ESCAPE && timer.isRunning()){
+                    inGame=false;
+                }
+                else{
+                    if(key==KeyEvent.VK_SPACE){
+                        inGame=true;
+                        initGame();
+                    }
+
+                }
+            }
+        }
     }
 
 
@@ -111,6 +150,81 @@ public class Model extends JPanel implements ActionListener {
             screenData[i] = levelData[i];
         }
     }
+
+    private void playGame(Graphics2D g2d){
+        if(dying){
+            death();
+        }else{
+            movePacman();
+            drawPacman(g2d);
+            moveGhosts(g2d);
+            checkMaze();
+        }
+    }
+
+    public void movePacman() {
+        int pos;
+        short ch ;
+
+        if (pacman_x % BLOCK_SIZE == 0 && pacman_y % BLOCK_SIZE == 0) {
+            pos = pacman_x / BLOCK_SIZE * N_BLOCKS * (int) (pacman_y / BLOCK_SIZE);
+            ch=screenData[pos];
+
+            if((ch & 16)!=0){
+                screenData[pos]=(short) (ch &15);
+                score++;
+            }
+            if (req_dx != 0 || req_dy != 0) {
+                if (!((req_dx == -1 && req_dy == 0 && (ch & 1) != 0)
+                        || (req_dx == 1 && req_dy == 0 && (ch & 4) != 0)
+                        || (req_dx == 0 && req_dy == -1 && (ch & 2) != 0)
+                        || (req_dx == 0 && req_dy == 1 && (ch & 8) != 0))) {
+                    pacmand_x = req_dx;
+                    pacmand_y = req_dy;
+                }
+            }
+
+            // Check for standstill
+            if ((pacmand_x == -1 && pacmand_y == 0 && (ch & 1) != 0)
+                    || (pacmand_x == 1 && pacmand_y == 0 && (ch & 4) != 0)
+                    || (pacmand_x == 0 && pacmand_y == -1 && (ch & 2) != 0)
+                    || (pacmand_x == 0 && pacmand_y == 1 && (ch & 8) != 0)) {
+                pacmand_x = 0;
+                pacmand_y = 0;
+            }
+        }
+            pacman_x = pacman_x + PACMAN_SPEED * pacmand_x;
+            pacman_y = pacman_y + PACMAN_SPEED * pacmand_y;
+        }
+    }
+    private void continueLevel(){
+        int dx=1;
+        int random;
+
+        for(int i=0;i<N_GHOSTS;i++){
+            ghost_x[i]=4*BLOCK_SIZE;
+            ghost_y[i]=4*BLOCK_SIZE;
+            ghost_dy[i]=0;
+            ghost_dx[i]=dx;
+            dx=-dx;
+            random=(int)(Math.random()*(currentSpeed+1));
+
+            if(random>currentSpeed){
+                random=currentSpeed;
+            }
+
+            ghostSpeed[i]=validSpeeds[random];
+        }
+        pacman_x=7*BLOCK_SIZE;
+        pacman_y=11*BLOCK_SIZE;
+
+        pacmand_x=0;
+        pacmand_y=0;
+        req_dx=0;
+        req_dy=0;
+        dying=false;
+    }
+
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
