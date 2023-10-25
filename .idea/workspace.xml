@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a6379c0f-a8d9-41a6-9f8a-4b64dd023321" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/src/pacman/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pacman/Model.java" afterDir="false" />
-    </list>
+    <list default="true" id="a6379c0f-a8d9-41a6-9f8a-4b64dd023321" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -61,7 +59,7 @@
       <workItem from="1696687108330" duration="366000" />
       <workItem from="1696687499414" duration="4794000" />
       <workItem from="1696697025611" duration="150000" />
-      <workItem from="1697991841153" duration="1323000" />
+      <workItem from="1697991841153" duration="4020000" />
     </task>
     <servers />
   </component>

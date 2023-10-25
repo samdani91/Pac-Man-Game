@@ -64,6 +64,7 @@ public class Model extends JPanel implements ActionListener {
 
         loadImages();
         initVariables();
+        addKeyListener(new TAdapter());
         setFocusable(true);
         initGame();
     }
@@ -94,40 +95,31 @@ public class Model extends JPanel implements ActionListener {
         timer.restart();
     }
 
-    class TAdapter extends KeyEvent{
-        public TAdapter(Component source, int id, long when, int modifiers, int keyCode, char keyChar, int keyLocation) {
-            super(source, id, when, modifiers, keyCode, keyChar, keyLocation);
-        }
+    class TAdapter extends KeyAdapter {
+        @Override
+        public void keyPressed(KeyEvent event) {
+            int key = event.getKeyCode();
 
-        public void keypressed(KeyEvent event){
-            int key=event.getKeyCode();
-
-            if(inGame){
-                if(key==KeyEvent.VK_LEFT){
-                    req_dx=-1;
-                    req_dy=0;
+            if (inGame) {
+                if (key == KeyEvent.VK_LEFT) {
+                    req_dx = -1;
+                    req_dy = 0;
+                } else if (key == KeyEvent.VK_RIGHT) {
+                    req_dx = 1;
+                    req_dy = 0;
+                } else if (key == KeyEvent.VK_UP) {
+                    req_dx = 0;
+                    req_dy = -1;
+                } else if (key == KeyEvent.VK_DOWN) {
+                    req_dx = 0;
+                    req_dy = 1;
+                } else if (key == KeyEvent.VK_ESCAPE && timer.isRunning()) {
+                    inGame = false;
                 }
-                else if(key==KeyEvent.VK_RIGHT){
-                    req_dx=1;
-                    req_dy=0;
-                }
-                else if(key==KeyEvent.VK_UP){
-                    req_dx=0;
-                    req_dy=-1;
-                }
-                else if(key==KeyEvent.VK_DOWN){
-                    req_dx=0;
-                    req_dy=1;
-                }
-                else if(key==KeyEvent.VK_ESCAPE && timer.isRunning()){
-                    inGame=false;
-                }
-                else{
-                    if(key==KeyEvent.VK_SPACE){
-                        inGame=true;
-                        initGame();
-                    }
-
+            } else {
+                if (key == KeyEvent.VK_SPACE) {
+                    inGame = true;
+                    initGame();
                 }
             }
         }
@@ -195,8 +187,135 @@ public class Model extends JPanel implements ActionListener {
         }
             pacman_x = pacman_x + PACMAN_SPEED * pacmand_x;
             pacman_y = pacman_y + PACMAN_SPEED * pacmand_y;
+    }
+
+    public void drawPacman(Graphics2D g2d){
+        if(req_dx==-1){
+            g2d.drawImage(left,pacman_x+1,pacman_y+1,this);
+        }else if(req_dx==1){
+            g2d.drawImage(right,pacman_x+1,pacman_y+1,this);
+        }else if(req_dy==-1){
+            g2d.drawImage(up,pacman_x+1,pacman_y+1,this);
+        }else{
+            g2d.drawImage(down,pacman_x+1,pacman_y+1,this);
         }
     }
+
+    public void moveGhosts(Graphics2D g2d){
+        int pos;
+        int count;
+        for(int i=0;i<N_GHOSTS;i++){
+            if(ghost_x[i]%BLOCK_SIZE==0 && ghost_y[i]%BLOCK_SIZE==0){
+                pos = ghost_x[i] / BLOCK_SIZE + N_BLOCKS * (int) (ghost_y[i] / BLOCK_SIZE);
+
+                count = 0;
+
+                if ((screenData[pos] & 1) == 0 && ghost_dx[i] != 1) {
+                    dx[count] = -1;
+                    dy[count] = 0;
+                    count++;
+                }
+
+                if ((screenData[pos] & 2) == 0 && ghost_dy[i] != 1) {
+                    dx[count] = 0;
+                    dy[count] = -1;
+                    count++;
+                }
+
+                if ((screenData[pos] & 4) == 0 && ghost_dx[i] != -1) {
+                    dx[count] = 1;
+                    dy[count] = 0;
+                    count++;
+                }
+
+                if ((screenData[pos] & 8) == 0 && ghost_dy[i] != -1) {
+                    dx[count] = 0;
+                    dy[count] = 1;
+                    count++;
+                }
+
+                if (count == 0) {
+
+                    if ((screenData[pos] & 15) == 15) {
+                        ghost_dx[i] = 0;
+                        ghost_dy[i] = 0;
+                    } else {
+                        ghost_dx[i] = -ghost_dx[i];
+                        ghost_dy[i] = -ghost_dy[i];
+                    }
+
+                } else {
+
+                    count = (int) (Math.random() * count);
+
+                    if (count > 3) {
+                        count = 3;
+                    }
+
+                    ghost_dx[i] = dx[count];
+                    ghost_dy[i] = dy[count];
+                }
+
+            }
+
+            ghost_x[i] = ghost_x[i] + (ghost_dx[i] * ghostSpeed[i]);
+            ghost_y[i] = ghost_y[i] + (ghost_dy[i] * ghostSpeed[i]);
+            drawGhost(g2d, ghost_x[i] + 1, ghost_y[i] + 1);
+
+            //if pacman touches a ghost
+            if (pacman_x > (ghost_x[i] - 12) && pacman_x < (ghost_x[i] + 12)
+                    && pacman_y > (ghost_y[i] - 12) && pacman_y < (ghost_y[i] + 12)
+                    && inGame) {
+
+                dying = true;
+            }
+        }
+    }
+
+    private void drawGhost(Graphics2D g2d, int x, int y) {
+        g2d.drawImage(ghost, x, y, this);
+    }
+
+    public void checkMaze(){
+        int i = 0;
+        boolean finished = true;
+
+        while (i < N_BLOCKS * N_BLOCKS && finished) {
+
+            if ((screenData[i]) != 0) {
+                finished = false;
+            }
+
+            i++;
+        }
+
+        if (finished) {
+
+            score += 50;
+
+            if (N_GHOSTS < MAX_GHOSTS) {
+                N_GHOSTS++;
+            }
+
+            if (currentSpeed < maxSpeed) {
+                currentSpeed++;
+            }
+
+            initLevel();
+        }
+    }
+
+    private void death() {
+
+        lives--;
+
+        if (lives == 0) {
+            inGame = false;
+        }
+
+        continueLevel();
+    }
+
     private void continueLevel(){
         int dx=1;
         int random;
@@ -235,10 +354,10 @@ public class Model extends JPanel implements ActionListener {
         g2d.fillRect(0, 0, d.width, d.height);
 
         drawMaze(g2d);
-        //drawScore(g2d);
+        drawScore(g2d);
 
         if (inGame) {
-            //playGame(g2d);
+            playGame(g2d);
         } else {
             showIntroScreen(g2d);
         }
@@ -287,6 +406,16 @@ public class Model extends JPanel implements ActionListener {
 
                 i++;
             }
+        }
+    }
+    private void drawScore(Graphics2D g) {
+        g.setFont(smallFont);
+        g.setColor(new Color(5, 181, 79));
+        String s = "Score: " + score;
+        g.drawString(s, SCREEN_SIZE / 2 + 96, SCREEN_SIZE + 16);
+
+        for (int i = 0; i < lives; i++) {
+            g.drawImage(heart, i * 28 + 8, SCREEN_SIZE + 1, this);
         }
     }
     private void showIntroScreen(Graphics2D g2d) {
