@@ -50,7 +50,7 @@ public class Model extends JPanel implements ActionListener {
             17, 16, 16, 20, 0, 17, 16, 16, 16, 16, 16, 16, 16, 16, 20,
             25, 24, 24, 24, 26, 24, 24, 24, 24, 24, 24, 24, 24, 24, 28
     };
-
+    //0=blue,1=left border,2=top border,4=right border,8=bottom border,16=white dots
     private final int validSpeeds[] = {1, 2, 3, 4, 6, 8};
     private final int maxSpeed = 6;
 
@@ -127,6 +127,7 @@ public class Model extends JPanel implements ActionListener {
         int i = 0;
         boolean finished = true;
 
+        //checking if all white dots are cleared
         while (i < N_BLOCKS * N_BLOCKS && finished) {
 
             if ((screenData[i]) != 0) {
@@ -136,6 +137,7 @@ public class Model extends JPanel implements ActionListener {
             i++;
         }
 
+        //level up
         if (finished) {
 
             score += 50;
@@ -173,7 +175,7 @@ public class Model extends JPanel implements ActionListener {
                 pos = ghost_x[i] / BLOCK_SIZE + N_BLOCKS * (int) (ghost_y[i] / BLOCK_SIZE);
 
                 count = 0;
-
+                //These blocks determine the possible directions the ghost can move based on the contents of the maze at its current position.
                 if ((screenData[pos] & 1) == 0 && ghost_dx[i] != 1) {
                     dx[count] = -1;
                     dy[count] = 0;
@@ -251,8 +253,14 @@ public class Model extends JPanel implements ActionListener {
             if ((ch & 16) != 0) {
                 screenData[pos] = (short) (ch & 15);
                 score++;
+                checkMaze();
             }
-
+            /*
+            This section checks for user input (req_dx and req_dy) and
+            validates that Pacman can move in the requested direction.
+            If the direction is valid (not blocked by a wall),
+            Pacman's direction is updated.
+            */
             if (req_dx != 0 || req_dy != 0) {
                 if (!((req_dx == -1 && req_dy == 0 && (ch & 1) != 0)
                         || (req_dx == 1 && req_dy == 0 && (ch & 4) != 0)
@@ -264,16 +272,19 @@ public class Model extends JPanel implements ActionListener {
             }
 
             // Check for standstill
+            //This block checks if Pacman is attempting to move into a wall, and if so, it sets Pacman's movement to zero, effectively keeping it in place.
             if ((pacmand_x == -1 && pacmand_y == 0 && (ch & 1) != 0)
                     || (pacmand_x == 1 && pacmand_y == 0 && (ch & 4) != 0)
                     || (pacmand_x == 0 && pacmand_y == -1 && (ch & 2) != 0)
                     || (pacmand_x == 0 && pacmand_y == 1 && (ch & 8) != 0)) {
                 pacmand_x = 0;
                 pacmand_y = 0;
+                checkMaze();
             }
         }
         pacman_x = pacman_x + PACMAN_SPEED * pacmand_x;
         pacman_y = pacman_y + PACMAN_SPEED * pacmand_y;
+        checkMaze();
     }
 
     private void drawPacman(Graphics2D g2d) {
@@ -298,31 +309,31 @@ public class Model extends JPanel implements ActionListener {
             for (x = 0; x < SCREEN_SIZE; x += BLOCK_SIZE) {
 
                 g2d.setColor(new Color(0,72,251));
-                g2d.setStroke(new BasicStroke(5));
+                g2d.setStroke(new BasicStroke(5));//line thickness
 
                 if ((levelData[i] == 0)) {
                     g2d.fillRect(x, y, BLOCK_SIZE, BLOCK_SIZE);
                 }
 
                 if ((screenData[i] & 1) != 0) {
-                    g2d.drawLine(x, y, x, y + BLOCK_SIZE - 1);
+                    g2d.drawLine(x, y, x, y + BLOCK_SIZE - 1);//left border
                 }
 
                 if ((screenData[i] & 2) != 0) {
-                    g2d.drawLine(x, y, x + BLOCK_SIZE - 1, y);
+                    g2d.drawLine(x, y, x + BLOCK_SIZE - 1, y);//top border
                 }
 
-                if ((screenData[i] & 4) != 0) {
+                if ((screenData[i] & 4) != 0) {//right border
                     g2d.drawLine(x + BLOCK_SIZE - 1, y, x + BLOCK_SIZE - 1,
                             y + BLOCK_SIZE - 1);
                 }
 
-                if ((screenData[i] & 8) != 0) {
+                if ((screenData[i] & 8) != 0) {//bottom border
                     g2d.drawLine(x, y + BLOCK_SIZE - 1, x + BLOCK_SIZE - 1,
                             y + BLOCK_SIZE - 1);
                 }
 
-                if ((screenData[i] & 16) != 0) {
+                if ((screenData[i] & 16) != 0) {//white dots
                     g2d.setColor(new Color(255,255,255));
                     g2d.fillOval(x + 10, y + 10, 6, 6);
                 }
@@ -337,7 +348,7 @@ public class Model extends JPanel implements ActionListener {
         lives = 3;
         score = 0;
         initLevel();
-        N_GHOSTS = 6;
+        N_GHOSTS = 5;
         currentSpeed = 3;
     }
 

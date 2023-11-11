@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a6379c0f-a8d9-41a6-9f8a-4b64dd023321" name="Changes" comment="" />
+    <list default="true" id="a6379c0f-a8d9-41a6-9f8a-4b64dd023321" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pacman/Model.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pacman/Model.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pacman/Pacman.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pacman/Pacman.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -60,10 +64,26 @@
       <workItem from="1696687499414" duration="4794000" />
       <workItem from="1696697025611" duration="150000" />
       <workItem from="1697991841153" duration="4020000" />
+      <workItem from="1698261460040" duration="7055000" />
+      <workItem from="1698596672217" duration="601000" />
+      <workItem from="1699026736026" duration="2000" />
+      <workItem from="1699614981462" duration="15817000" />
+      <workItem from="1699671314933" duration="605000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
